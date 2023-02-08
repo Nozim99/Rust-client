@@ -1,0 +1,104 @@
+.lds-ellipsis {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.lds-ellipsis div {
+  position: absolute;
+  top: 33px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #22c55e;
+  animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+.lds-ellipsis div:nth-child(1) {
+  left: 8px;
+  animation: lds-ellipsis1 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(2) {
+  left: 8px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(3) {
+  left: 32px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(4) {
+  left: 56px;
+  animation: lds-ellipsis3 0.6s infinite;
+}
+@keyframes lds-ellipsis1 {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes lds-ellipsis3 {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+@keyframes lds-ellipsis2 {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(24px, 0);
+  }
+}
+.loading1 {
+  top: 54%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.window_center_flex {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.window_center_fixed {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.login_input_name {
+  top: 50%;
+  left: 0.6rem;
+  transform: translateY(-50%);
+}
+.login + div {
+  transition: all 300ms;
+  font-size: 0.9em;
+}
+.login:valid + div,
+.login:focus + div {
+  top: -0.7em;
+  font-size: 0.8rem;
+  color: #d1d3d2;
+}
+.numbers_scrollbar::-webkit-scrollbar {
+  background: rgb(32, 32, 32);
+  width: 0.6rem;
+}
+.numbers_scrollbar::-webkit-scrollbar-thumb {
+  background: rgb(139, 139, 139);
+}
+.numbers_scrollbar_codes::-webkit-scrollbar {
+  background-color: #171e29;
+  width: 0.8em;
+}
+.back_drop {
+  backdrop-filter: blur(0.06em);
+}
+.height_100 {
+  height: calc(100vh - 10rem);
+}
