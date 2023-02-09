@@ -1,5 +1,6 @@
 export const URLS = {
-  start: "http://localhost:5000",
+  start: "https://us-central1-rustify-dac51.cloudfunctions.net/app",
+  // start: "http://localhost:5000",
 
   // Auth
   signup: "/login/signup",
