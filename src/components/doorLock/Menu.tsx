@@ -7,6 +7,8 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../../redux/store'
 import { useNavigate } from 'react-router-dom'
 import { Toast } from '../../services/toast'
+import Loading from '../extra/Loading'
+import LdsRoller from '../extra/LdsRoller'
 
 interface Members {
   _id: {
@@ -86,6 +88,7 @@ export default function Menu() {
   const [status, setStatus] = useState<"player" | "leader" | "owner">("player")
   const [deleteModal, setDeleteModal] = useState(false)
   const [codes, setCodes] = useState<{ code: string; index: number; _id?: string }[]>()
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     axios.get(URLS.start + URLS.getGroupMembers + groupId, {
@@ -94,6 +97,7 @@ export default function Menu() {
       }
     })
       .then((result: { data: Result }) => {
+        setLoading(false)
         setOwner(result.data.owner)
         setMembers(result.data.members)
         for (let i of result.data.members) {
@@ -187,76 +191,80 @@ export default function Menu() {
         </div>
       </div>
 
-      <div className='mt-7'>
-        {
-          owner ? (
-            <div className='flex justify-between py-5 px-3 bg-slate-900 border border-slate-700 hover:border-slate-500'>
-              <div className='w-6/12'>{owner.name.name}</div>
-              <div className='w-1/12'>{owner.codes.length}</div>
-              <div className='w-2/12'><FontAwesomeIcon className='text-amber-400 text-lg mr-1' icon={faCrown} /> <span className='text-slate-300 max-sm:hidden'>Owner</span></div>
-              <div className='relative'>
-                <FontAwesomeIcon className='cursor-pointer' onClick={() => setModal("owner")} icon={faBars} />
-                {
-                  modal === "owner" ? (
-                    <>
-                      <div onClick={() => setModal('')} className='fixed w-screen h-screen top-0 left-0 z-10'></div>
-                      <div className='absolute top-0 right-0 flex bg-slate-700 z-20'>
-                        <div onClick={() => { setCodes(owner.codes); setModal("") }} className='flex items-center px-5 py-1 cursor-pointer hover:bg-slate-500'>
-                          <FontAwesomeIcon className='mr-5' icon={faFileLines} />  <span className='tracking-widest font-semibold'>Codes</span>
-                        </div>
-                      </div>
-                    </>
-                  ) : ""
-                }
-              </div>
-            </div>
-          ) : ""
-        }
-
-        {
-          members ? (
-            members.length ? (
-              members.map((item, index) => (
-                <div key={index} className='flex justify-between py-5 px-3 bg-slate-900 border border-slate-700 hover:border-slate-500'>
-                  <div className='w-6/12'>{item._id.name}</div>
-                  <div className='w-1/12'>{item.codes.length}</div>
-                  {
-                    item.status === "player" ? <div className='w-2/12'><FontAwesomeIcon className='text-amber-400 text-cyan-400 text-lg mr-1' icon={faChessPawn} /> <span className='text-slate-300 max-sm:hidden'>Player</span></div> : <div className='w-2/12'><FontAwesomeIcon className='text-green-500 text-green-500 text-lg mr-1' icon={faChessBishop} /> <span className='text-slate-300 max-sm:hidden'>Lider</span></div>
-                  }
+      {
+        loading ? <LdsRoller /> : (
+          <div className='mt-7'>
+            {
+              owner ? (
+                <div className='flex justify-between py-5 px-3 bg-slate-900 border border-slate-700 hover:border-slate-500'>
+                  <div className='w-6/12'>{owner.name.name}</div>
+                  <div className='w-1/12'>{owner.codes.length}</div>
+                  <div className='w-2/12'><FontAwesomeIcon className='text-amber-400 text-lg mr-1' icon={faCrown} /> <span className='text-slate-300 max-sm:hidden'>Owner</span></div>
                   <div className='relative'>
-                    <FontAwesomeIcon className='cursor-pointer' onClick={() => setModal(item._id._id)} icon={faBars} />
+                    <FontAwesomeIcon className='cursor-pointer' onClick={() => setModal("owner")} icon={faBars} />
                     {
-                      modal === item._id._id ? (
+                      modal === "owner" ? (
                         <>
-                          <div onClick={() => setModal('')} className='fixed w-screen h-screen top-0 left-0 '></div>
-                          <ul className='absolute top-0 right-0 bg-slate-700'>
-                            <li onClick={() => { setCodes(item.codes); setModal("") }} className='cursor-pointer px-8 pb-1 pt-2 hover:bg-slate-500 flex'><FontAwesomeIcon className='mr-4' icon={faFileLines} /> <span className='tracking-widest font-semibold'>Codes</span></li>
-                            {
-                              status === "owner" ? (
-                                <>
-                                  <li onClick={() => { changeStatus(item._id._id, "leader"); setModal("") }} className='cursor-pointer px-8 py-1 flex items-center text-green-500 hover:bg-slate-500'><FontAwesomeIcon className='mr-5' icon={faChessBishop} /> <span className='tracking-widest font-semibold'>Lider</span></li>
-                                  <li onClick={() => { changeStatus(item._id._id, "player"); setModal("") }} className='cursor-pointer px-8 py-1 flex items-center text-cyan-400 hover:bg-slate-500'><FontAwesomeIcon className='mr-5' icon={faChessPawn} /> <span className='tracking-widest font-semibold'>Player</span></li>
-                                  <li onClick={() => { deletePlayer(item._id._id); setModal("") }} className='cursor-pointer px-8 pt-1 pb-2 flex items-center text-red-500 hover:bg-slate-500'><FontAwesomeIcon className='mr-5' icon={faTrash} /> <span className='tracking-widest font-semibold'>Delete</span></li>
-                                </>
-                              ) : ''
-                            }
-                            {
-                              status === "leader" ? (item.status === "player" ? (
-                                <li onClick={() => { deletePlayer(item._id._id); setModal("") }} className='cursor-pointer px-8 pt-1 pb-2 flex items-center text-red-500 hover:bg-slate-500'><FontAwesomeIcon className='mr-5' icon={faTrash} /> <span className='tracking-widest font-semibold'>Delete</span></li>
-                              ) : "") : ""
-                            }
-                          </ul>
+                          <div onClick={() => setModal('')} className='fixed w-screen h-screen top-0 left-0 z-10'></div>
+                          <div className='absolute top-0 right-0 flex bg-slate-700 z-20'>
+                            <div onClick={() => { setCodes(owner.codes); setModal("") }} className='flex items-center px-5 py-1 cursor-pointer hover:bg-slate-500'>
+                              <FontAwesomeIcon className='mr-5' icon={faFileLines} />  <span className='tracking-widest font-semibold'>Codes</span>
+                            </div>
+                          </div>
                         </>
-                      ) : ''
+                      ) : ""
                     }
                   </div>
                 </div>
-              ))
-            ) : ''
-          ) : ""
-        }
+              ) : ""
+            }
 
-      </div>
+            {
+              members ? (
+                members.length ? (
+                  members.map((item, index) => (
+                    <div key={index} className='flex justify-between py-5 px-3 bg-slate-900 border border-slate-700 hover:border-slate-500'>
+                      <div className='w-6/12'>{item._id.name}</div>
+                      <div className='w-1/12'>{item.codes.length}</div>
+                      {
+                        item.status === "player" ? <div className='w-2/12'><FontAwesomeIcon className='text-amber-400 text-cyan-400 text-lg mr-1' icon={faChessPawn} /> <span className='text-slate-300 max-sm:hidden'>Player</span></div> : <div className='w-2/12'><FontAwesomeIcon className='text-green-500 text-green-500 text-lg mr-1' icon={faChessBishop} /> <span className='text-slate-300 max-sm:hidden'>Lider</span></div>
+                      }
+                      <div className='relative'>
+                        <FontAwesomeIcon className='cursor-pointer' onClick={() => setModal(item._id._id)} icon={faBars} />
+                        {
+                          modal === item._id._id ? (
+                            <>
+                              <div onClick={() => setModal('')} className='fixed w-screen h-screen top-0 left-0 '></div>
+                              <ul className='absolute top-0 right-0 bg-slate-700'>
+                                <li onClick={() => { setCodes(item.codes); setModal("") }} className='cursor-pointer px-8 pb-1 pt-2 hover:bg-slate-500 flex'><FontAwesomeIcon className='mr-4' icon={faFileLines} /> <span className='tracking-widest font-semibold'>Codes</span></li>
+                                {
+                                  status === "owner" ? (
+                                    <>
+                                      <li onClick={() => { changeStatus(item._id._id, "leader"); setModal("") }} className='cursor-pointer px-8 py-1 flex items-center text-green-500 hover:bg-slate-500'><FontAwesomeIcon className='mr-5' icon={faChessBishop} /> <span className='tracking-widest font-semibold'>Lider</span></li>
+                                      <li onClick={() => { changeStatus(item._id._id, "player"); setModal("") }} className='cursor-pointer px-8 py-1 flex items-center text-cyan-400 hover:bg-slate-500'><FontAwesomeIcon className='mr-5' icon={faChessPawn} /> <span className='tracking-widest font-semibold'>Player</span></li>
+                                      <li onClick={() => { deletePlayer(item._id._id); setModal("") }} className='cursor-pointer px-8 pt-1 pb-2 flex items-center text-red-500 hover:bg-slate-500'><FontAwesomeIcon className='mr-5' icon={faTrash} /> <span className='tracking-widest font-semibold'>Delete</span></li>
+                                    </>
+                                  ) : ''
+                                }
+                                {
+                                  status === "leader" ? (item.status === "player" ? (
+                                    <li onClick={() => { deletePlayer(item._id._id); setModal("") }} className='cursor-pointer px-8 pt-1 pb-2 flex items-center text-red-500 hover:bg-slate-500'><FontAwesomeIcon className='mr-5' icon={faTrash} /> <span className='tracking-widest font-semibold'>Delete</span></li>
+                                  ) : "") : ""
+                                }
+                              </ul>
+                            </>
+                          ) : ''
+                        }
+                      </div>
+                    </div>
+                  ))
+                ) : ''
+              ) : ""
+            }
+
+          </div>
+        )
+      }
       {
         deleteModal ? (
           <>
@@ -275,7 +283,7 @@ export default function Menu() {
         codes ? (
           <>
             <div onClick={() => setCodes(undefined)} className='w-screen h-screen fixed bg-slate-300/10 top-0 left-0 back_drop'></div>
-            <div className='w-60 bg-gray-800 window_center_fixed pt-6'>
+            <div className='w-80 bg-gray-800 window_center_fixed pt-6'>
               <div onClick={() => setCodes(undefined)} className='absolute top-0 right-2 text-slate-300 cursor-pointer text-lg'><FontAwesomeIcon icon={faXmark} /></div>
               <div className='border-b mx-1 flex'><span className='text-gray-300 w-2/6 inline-block ml-4 font-semibold'>№</span>   <span className='font-semibold tracking-wide w-4/6 inline-block text-gray-300 ml-3'>Code</span></div>
               <ul className='overflow-auto height_100 mt-2 numbers_scrollbar numbers_scrollbar_codes'>

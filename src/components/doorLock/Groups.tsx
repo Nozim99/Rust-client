@@ -10,6 +10,8 @@ import { useDispatch } from 'react-redux'
 import { setGroups, setMyGroups, addMyGroups } from '../../redux/slices/data'
 import { setGroupId, setGroupName } from '../../redux/slices/config'
 import { Toast } from '../../services/toast'
+import Loading from '../extra/Loading'
+import LdsRoller from '../extra/LdsRoller'
 
 
 export default function Groups() {
@@ -22,6 +24,15 @@ export default function Groups() {
   const [modal, setModal] = useState(false)
   const [name, setName] = useState('')
   const [nameC, setNameC] = useState("border-white")
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    if (groups || myGroups) {
+      setLoading(true)
+    } else {
+      setLoading(true)
+    }
+  }, [groups, myGroups])
 
   const send = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -50,7 +61,7 @@ export default function Groups() {
   }
 
   useEffect(() => {
-    if (!token) navigate("/raid-lock")
+    if (!token) navigate("/")
 
     axios.get<{ myGroup: [], otherGroup: [] }>(URLS.start + URLS.getGroups, {
       headers: {
@@ -78,47 +89,52 @@ export default function Groups() {
         <button onClick={() => setModal(true)} className='max-md:text-sm bg-[#16A34A] py-1.5 px-5 rounded'>Create group</button>
       </div>
 
-      <div className='mt-10'>
-        {
-          [...myGroups, ...groups].length ? (
-            <>
-              {
-                myGroups.length ? (
-                  myGroups.map(item => {
-                    return (
-                      <div onClick={() => pageGroup(item._id, item.name)} key={item.name} className='border border-slate-500 flex justify-between bg-slate-900 hover:bg-slate-800 py-5 px-5 font-semibold tracking-wide text-lg max-sm:text-sm items-center cursor-pointer relative'>
-                        <div className='w-4/12'>{item.name} <FontAwesomeIcon className='absolute top-1 left-2 text-sm text-amber-400' icon={faCrown} /></div>
-                        <div className='w-3/12'>{item.createdBy.name}</div>
-                        <div className='flex items-center w-1/12 max-sm:w-2/12'>{item.members.length + 1} <FontAwesomeIcon className='text-sm ml-1 text-slate-200 ' icon={faUserGroup} /></div>
-                        <div className='flex items-center w-3/12 max-sm:hidden max-lg:text-sm'>{new Date(item.createdAt).toLocaleDateString("ru-RU")} <FontAwesomeIcon className='text-sm text-slate-200 ml-1 max-md:hidden' icon={faCalendarDays} /></div>
-                        <div className='w-1/12 max-sm:w-2/12 max-md:text-sm'>{(item.count / 100).toFixed(2)} %</div>
-                      </div>
-                    )
-                  })
-                ) : ""
-              }
+      {
+        myGroups ? (groups ? (
+          <div className='mt-10'>
+            {
+              [...myGroups, ...groups].length ? (
+                <>
+                  {
+                    myGroups.length ? (
+                      myGroups.map(item => {
+                        return (
+                          <div onClick={() => pageGroup(item._id, item.name)} key={item.name} className='border border-slate-500 flex justify-between bg-slate-900 hover:bg-slate-800 py-5 px-5 font-semibold tracking-wide text-lg max-sm:text-sm items-center cursor-pointer relative'>
+                            <div className='w-4/12'>{item.name} <FontAwesomeIcon className='absolute top-1 left-2 text-sm text-amber-400' icon={faCrown} /></div>
+                            <div className='w-3/12'>{item.createdBy.name}</div>
+                            <div className='flex items-center w-1/12 max-sm:w-2/12'>{item.members.length + 1} <FontAwesomeIcon className='text-sm ml-1 text-slate-200 ' icon={faUserGroup} /></div>
+                            <div className='flex items-center w-3/12 max-sm:hidden max-lg:text-sm'>{new Date(item.createdAt).toLocaleDateString("ru-RU")} <FontAwesomeIcon className='text-sm text-slate-200 ml-1 max-md:hidden' icon={faCalendarDays} /></div>
+                            <div className='w-1/12 max-sm:w-2/12 max-md:text-sm'>{(item.count / 100).toFixed(2)} %</div>
+                          </div>
+                        )
+                      })
+                    ) : ""
+                  }
 
-              {
-                groups.length ? (
-                  groups.map(item => {
-                    return (
-                      <div onClick={() => pageGroup(item._id, item.name)} key={item.name} className='max-sm:text-xs relative border border-slate-500 flex justify-between bg-slate-900 hover:bg-slate-800 py-5 px-5 font-semibold tracking-wide text-lg max-sm:text-sm items-center cursor-pointer'>
-                        <div className='w-4/12'>{item.name} {item.status === "player" ? <FontAwesomeIcon className='absolute top-1 left-2 text-sm text-cyan-400' icon={faChessPawn} /> : <FontAwesomeIcon className='absolute top-1 left-2 text-sm text-green-500' icon={faChessBishop} />} </div>
-                        <div className='w-4/12'>{item.createdBy.name}</div>
-                        <div className='flex items-center w-1/12 max-sm:w-2/12'>{item.members.length + 1} <FontAwesomeIcon className='text-sm ml-1 text-slate-200' icon={faUserGroup} /></div>
-                        <div className='flex items-center w-2/12 max-sm:hidden max-lg:text-sm'>{new Date(item.createdAt).toLocaleDateString("ru-RU")} <FontAwesomeIcon className='text-sm text-slate-200 ml-1 max-md:hidden' icon={faCalendarDays} /></div>
-                        <div className='w-1/12 max-sm:w-2/12 max-md:text-sm'>{(item.count / 100).toFixed(2)} %</div>
-                      </div>
-                    )
-                  })
+                  {
+                    groups.length ? (
+                      groups.map(item => {
+                        return (
+                          <div onClick={() => pageGroup(item._id, item.name)} key={item.name} className='max-sm:text-xs relative border border-slate-500 flex justify-between bg-slate-900 hover:bg-slate-800 py-5 px-5 font-semibold tracking-wide text-lg max-sm:text-sm items-center cursor-pointer'>
+                            <div className='w-4/12'>{item.name} {item.status === "player" ? <FontAwesomeIcon className='absolute top-1 left-2 text-sm text-cyan-400' icon={faChessPawn} /> : <FontAwesomeIcon className='absolute top-1 left-2 text-sm text-green-500' icon={faChessBishop} />} </div>
+                            <div className='w-4/12'>{item.createdBy.name}</div>
+                            <div className='flex items-center w-1/12 max-sm:w-2/12'>{item.members.length + 1} <FontAwesomeIcon className='text-sm ml-1 text-slate-200' icon={faUserGroup} /></div>
+                            <div className='flex items-center w-2/12 max-sm:hidden max-lg:text-sm'>{new Date(item.createdAt).toLocaleDateString("ru-RU")} <FontAwesomeIcon className='text-sm text-slate-200 ml-1 max-md:hidden' icon={faCalendarDays} /></div>
+                            <div className='w-1/12 max-sm:w-2/12 max-md:text-sm'>{(item.count / 100).toFixed(2)} %</div>
+                          </div>
+                        )
+                      })
 
-                ) : ""
-              }
-            </>
-          ) : <h3>There is no group</h3>
-        }
+                    ) : ""
+                  }
+                </>
+              ) : <h3 className='max-sm:ml-2'>There is no group</h3>
+            }
 
-      </div>
+          </div>
+        ) : <LdsRoller />
+        ) : <LdsRoller />
+      }
 
       {modal ? (
         <div>
@@ -126,8 +142,8 @@ export default function Groups() {
           <form className='window_center_flex bg-gray-800 pb-10 rounded border border-white/30' onSubmit={send}>
 
             <h3 className='text-2xl font-semibold mb-5 text-center pt-7 relative'>Create Group <FontAwesomeIcon onClick={() => setModal(false)} className='absolute top-1 right-2 text-slate-400 cursor-pointer' icon={faXmark} /></h3>
-            <div className='w-80 relative mx-20'>
-              <input required className={'login text-black w-full outline-none px-2 py-1 rounded border-2 ' + nameC} onChange={e => { setName(e.target.value); setNameC('border-white') }} type="text" />
+            <div className='w-80 relative mx-20 max-sm:w-52'>
+              <input required className={'login text-black w-full outline-none px-2 py-1 rounded border-2 max-sm:py-0.5 ' + nameC} onChange={e => { setName(e.target.value); setNameC('border-white') }} type="text" />
               <div className='absolute login_input_name text-black pointer-events-none'>Group name</div>
             </div>
             <div className='mx-20 '>

@@ -15,8 +15,9 @@ export const URLS = {
   deleteGroup: "/door-lock/delete-group",
   getGroupMembers: "/door-lock/group-members/",
   addPlayer: "/door-lock/add-player",
-  acceptNotification: "/door-lock/accept-notification/",
   getNotifications: "/door-lock/get-notifications",
+  acceptNotification: "/door-lock/accept-notification/",
+  denyNotification: "/door-lock/deny-notification/",
   deletePlayer: "/door-lock/remove-player",
   getUsers: "/door-lock/get-users",
   status: "/door-lock/status"

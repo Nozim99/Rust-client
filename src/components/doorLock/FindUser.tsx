@@ -6,6 +6,8 @@ import { RootState } from '../../redux/store'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck, faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { Toast } from '../../services/toast'
+import Loading from '../extra/Loading'
+import LdsRoller from '../extra/LdsRoller'
 
 interface Data {
   notification: string[];
@@ -17,7 +19,7 @@ interface Data {
 export default function FindUser() {
   const { token, groupId } = useSelector((state: RootState) => state.config)
   const [name, setName] = useState("")
-  const [data, setData] = useState<Data[]>([])
+  const [data, setData] = useState<Data[] | null>()
 
   useEffect(() => {
     axios.get(URLS.start + URLS.getUsers + `?name=${name}`, {
@@ -58,13 +60,17 @@ export default function FindUser() {
       <div className='text-center mt-8'>
         <input onChange={e => setName(e.target.value)} className='px-5 py-0.5 outline-none text-slate-600 tracking-wide rounded-2xl w-80' type="text" placeholder='Name' />
       </div>
-      <ul className='mt-5'>
-        {
-          data.map(item => (
-            <li className='my-2 ml-4' key={item.name}><FontAwesomeIcon onClick={() => send(item._id)} className='mr-3 text-green-500 cursor-pointer' icon={faUserPlus} /> <span className='cursor-default'>{item.name}</span></li>
-          ))
-        }
-      </ul>
+      {
+        data ? (
+          <ul className='mt-5'>
+            {
+              data.map(item => (
+                <li className='my-2 ml-4' key={item.name}><FontAwesomeIcon onClick={() => send(item._id)} className='mr-3 text-green-500 cursor-pointer' icon={faUserPlus} /> <span className='cursor-default'>{item.name}</span></li>
+              ))
+            }
+          </ul>
+        ) : <LdsRoller />
+      }
     </div>
   )
 }

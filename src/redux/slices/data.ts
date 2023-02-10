@@ -19,13 +19,13 @@ interface TryYourselfState {
   numbers: string[];
 }
 
-const initialState: { tryYourself: TryYourselfState, groups: Group[], myGroups: Group[], codes: { index?: number, code?: string, _id?: string }[] } = {
+const initialState: { tryYourself: TryYourselfState, groups: Group[] | null, myGroups: Group[] | null, codes: { index?: number, code?: string, _id?: string }[] } = {
   tryYourself: {
     count: 0,
     numbers: [],
   },
-  myGroups: [],
-  groups: [],
+  myGroups: null,
+  groups: null,
   codes: []
 };
 
@@ -45,7 +45,11 @@ const dataSlice = createSlice({
     },
     addMyGroups: (state, { payload }) => {
       payload[0].createdBy = { name: payload[1] }
-      state.myGroups.push(payload[0])
+      if (state.myGroups) {
+        state.myGroups.push(payload[0])
+      } else {
+        state.myGroups = [payload[0]]
+      }
     },
     setCodes: (state, { payload }) => {
       state.codes = payload

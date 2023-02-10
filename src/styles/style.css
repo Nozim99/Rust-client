@@ -102,3 +102,159 @@
 .height_100 {
   height: calc(100vh - 10rem);
 }
+
+/* Lds loader */
+.lds-roller {
+  display: inline-block;
+  position: absolute;
+  width: 10em;
+  height: 10em;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.lds-roller div {
+  animation: lds-roller 1.6s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  transform-origin: 5em 5em;
+}
+.lds-roller div:after {
+  content: " ";
+  display: block;
+  position: absolute;
+  width: 0.875em;
+  height: 0.875em;
+  border-radius: 50%;
+  background: #fff;
+  margin: -0.5em 0 0 -0.5em;
+}
+.lds-roller_light div:after {
+  background: #0fcf76;
+}
+.lds-roller div:nth-child(1) {
+  animation-delay: -0.046s;
+}
+.lds-roller div:nth-child(1):after {
+  top: 7.875em;
+  left: 7.875em;
+}
+.lds-roller div:nth-child(2) {
+  animation-delay: -0.082s;
+}
+.lds-roller div:nth-child(2):after {
+  top: 8.5em;
+  left: 7em;
+}
+.lds-roller div:nth-child(3) {
+  animation-delay: -0.118s;
+}
+.lds-roller div:nth-child(3):after {
+  top: 8.876em;
+  left: 6em;
+}
+.lds-roller div:nth-child(4) {
+  animation-delay: -0.154s;
+}
+.lds-roller div:nth-child(4):after {
+  top: 8.9375em;
+  left: 5em;
+}
+.lds-roller div:nth-child(5) {
+  animation-delay: -0.19s;
+}
+.lds-roller div:nth-child(5):after {
+  top: 8.876em;
+  left: 4em;
+}
+.lds-roller div:nth-child(6) {
+  animation-delay: -0.226s;
+}
+.lds-roller div:nth-child(6):after {
+  top: 8.5em;
+  left: 3em;
+}
+.lds-roller div:nth-child(7) {
+  animation-delay: -0.262s;
+}
+.lds-roller div:nth-child(7):after {
+  top: 7.875em;
+  left: 2.125em;
+}
+.lds-roller div:nth-child(8) {
+  animation-delay: -0.298s;
+}
+.lds-roller div:nth-child(8):after {
+  top: 7em;
+  left: 1.5em;
+}
+@keyframes lds-roller {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Server Nod Found 404 */
+.not_found {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+.not_found_body {
+  display: flex;
+  font-size: 5em;
+  position: relative;
+  justify-content: space-between;
+  width: 3.6em;
+}
+.not_found_body svg {
+  position: absolute;
+  font-size: 1.3em;
+}
+.not_found_gear {
+  top: 0.3em;
+  left: 0.4em;
+  color: #0d84c8;
+  animation: not_found_animated2 4s linear infinite;
+}
+.not_found_gear2 {
+  top: 0em;
+  right: 0.5em;
+  color: #00b906;
+  animation: not_found_animated 4s linear infinite;
+  animation-delay: -600ms;
+}
+.not_found h2 {
+  font-size: 2.2em;
+}
+@keyframes not_found_animated {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes not_found_animated2 {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0);
+  }
+}
+
+@media (max-width: 425px) {
+  .not_found {
+    font-size: 13px;
+  }
+}
+@media (max-width: 360px) {
+  .not_found {
+    font-size: 10px;
+  }
+}
+/* / Server Nod Found 404 / */
