@@ -1,13 +1,7 @@
-import { useEffect, useState } from 'react'
-import reactLogo from './assets/react.svg'
 import './App.css'
-import DoorLock from './components/doorLock/views/DoorLock'
-import Footer from './components/views/Footer'
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom'
 import Navbar from './components/views/Navbar'
 import Signup from './components/views/Signup'
-import { Provider } from 'react-redux'
-import { RootState, store } from './redux/store'
 import 'react-toastify/dist/ReactToastify.css';
 import DoorHome from './components/doorLock/DoorHome'
 import Groups from './components/doorLock/Groups'
@@ -17,13 +11,10 @@ import FindUser from './components/doorLock/FindUser'
 import Notifications from './components/doorLock/Notifications'
 import { useSelector } from 'react-redux'
 import PageNotFound from './components/extra/PageNotFound'
+import CalcHome from './components/calculator/CalcHome'
+import CalcDoor from './components/calculator/CalcDoor'
 
 function App() {
-  const navigate = useNavigate()
-  const { token } = useSelector((state: RootState) => state.config)
-  useEffect(() => {
-    if (!token) navigate("/")
-  }, [])
 
   return (
     <div className="App mx-auto">
@@ -35,6 +26,8 @@ function App() {
         <Route path='/raid-lock/groups/group/menu' element={<Menu />} />
         <Route path='/raid-lock/groups/group/menu/find-user' element={<FindUser />} />
         <Route path='/raid-lock/notifications' element={<Notifications />} />
+        {/* <Route path='/raid' element={<CalcHome />} /> */}
+        {/* <Route path='/raid/door' element={<CalcDoor />} /> */}
         <Route path='*' element={<PageNotFound />} />
       </Routes>
       {/* <DoorLock /> */}

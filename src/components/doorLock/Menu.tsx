@@ -91,6 +91,8 @@ export default function Menu() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    if (!token) navigate("/")
+
     axios.get(URLS.start + URLS.getGroupMembers + groupId, {
       headers: {
         Authorization: `Bearer ${token}`

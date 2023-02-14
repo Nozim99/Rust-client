@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { Toast } from '../../services/toast';
 import LdsRoller from '../extra/LdsRoller';
+import { useNavigate } from 'react-router-dom';
 
 interface Data {
   groupId: {
@@ -19,22 +20,9 @@ interface Data {
 }
 
 export default function Notifications() {
+  const navigate = useNavigate()
   const { token } = useSelector((state: RootState) => state.config)
   const [data, setData] = useState<Data[] | null>()
-
-  const getData = () => {
-    axios.get(URLS.start + URLS.getNotifications, {
-      headers: {
-        Authorization: "Bearer " + token
-      }
-    })
-      .then(result => {
-        setData(result.data)
-      })
-      .catch(error => {
-        console.error(error)
-      })
-  }
 
   const allow = (id: string, name: string) => {
     axios.put(URLS.start + URLS.acceptNotification + id, null, {
@@ -71,11 +59,32 @@ export default function Notifications() {
       })
   }
 
+  const getData = () => {
+    axios.get(URLS.start + URLS.getNotifications, {
+      headers: {
+        Authorization: "Bearer " + token
+      }
+    })
+      .then(result => {
+        setData(result.data)
+      })
+      .catch(error => {
+        console.error(error)
+      })
+  }
+
   useEffect(() => {
-    getData()
-    setInterval(() => {
+    let interval: NodeJS.Timeout | null = null;
+    if (!token) {
+      navigate("/")
+    } else {
       getData()
-    }, 2000)
+      interval = setInterval(() => {
+        getData()
+      }, 1000)
+    }
+
+    return () => clearInterval(interval as NodeJS.Timeout)
   }, [])
 
   return (

@@ -8,6 +8,7 @@ import { faCheck, faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { Toast } from '../../services/toast'
 import Loading from '../extra/Loading'
 import LdsRoller from '../extra/LdsRoller'
+import { useNavigate } from 'react-router-dom'
 
 interface Data {
   notification: string[];
@@ -17,9 +18,14 @@ interface Data {
 }
 
 export default function FindUser() {
+  const navigate = useNavigate()
   const { token, groupId } = useSelector((state: RootState) => state.config)
   const [name, setName] = useState("")
   const [data, setData] = useState<Data[] | null>()
+
+  useEffect(() => {
+    if (!token) navigate("/")
+  }, [])
 
   useEffect(() => {
     axios.get(URLS.start + URLS.getUsers + `?name=${name}`, {
